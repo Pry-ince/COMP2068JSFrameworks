@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: your-service-name
+    env: node
+    plan: free
+    repo: https://github.com/Pry-ince/COMP2068JSFrameworks
+    branch: main
+    rootDir: generator
+    buildCommand: npm install
+    startCommand: npm start
