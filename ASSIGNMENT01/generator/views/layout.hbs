@@ -1,10 +1,81 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <title>{{title}}</title>
-    <link rel='stylesheet' href='/stylesheets/style.css' />
-  </head>
-  <body>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{{title}} | Portfolio</title>
+  <link rel="stylesheet" href="/ASSIGNMENT01/generator/public/stylesheets/style.css" />
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #f9f9f9;
+      color: #333;
+    }
+
+    header {
+      background-color: #222;
+      color: white;
+      padding: 1rem;
+    }
+
+    nav a {
+      color: white;
+      text-decoration: none;
+      margin-right: 1rem;
+      font-weight: bold;
+    }
+
+    nav a:hover {
+      text-decoration: underline;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+    }
+
+    footer {
+      background-color: #222;
+      color: white;
+      text-align: center;
+      padding: 1rem;
+      margin-top: 4rem;
+    }
+
+    footer a {
+      color: white;
+      margin: 0 1rem;
+      text-decoration: none;
+    }
+
+    footer a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <nav class="container">
+      <a href="/">Home</a>
+      <a href="/about">About Me</a>
+      <a href="/projects">Projects</a>
+      <a href="/contact">Contact Me</a>
+    </nav>
+  </header>
+
+  <main class="container">
     {{{body}}}
-  </body>
+  </main>
+
+  <footer>
+    <a href="https://github.com/your-github" target="_blank">GitHub</a>
+    <a href="https://linkedin.com/in/your-linkedin" target="_blank">LinkedIn</a>
+  </footer>
+</body>
+
 </html>
