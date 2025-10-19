@@ -18,6 +18,7 @@ function calculate(req, res) {
   if (method === 'add') {
     result = x + y;
     symbol = '+';
+  } else if (method === 'subtract') {
     result = x - y;
     symbol = '-';
   } else if (method === 'multiply') {
