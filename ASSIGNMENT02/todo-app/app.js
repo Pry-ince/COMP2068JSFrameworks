@@ -3,82 +3,74 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
-require('dotenv').config();  
+require('dotenv').config();
 
-var express = require('express');
 var app = express(); 
 
-
+// Test route
 app.get('/test', (req, res) => {
-  res.send('Test route working!');
+  res.send('Test route working! ✅');
 });
 
-
+// Routers
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
+var authRouter = require('./routes/auth');
+var tasksRouter = require('./routes/tasks');
 
-
-// view engine setup
+// View engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'hbs');
 
 const hbs = require('hbs');
 hbs.registerPartials(path.join(__dirname, 'views/partials'));
 
-
+// Middleware
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-
+// Database & Auth
 const connectDB = require('./config/db');
 const session = require('express-session');
 const passport = require('passport');
-const LocalStrategy = require('passport-local').Strategy;
-const GitHubStrategy = require('passport-github2').Strategy;
-const User = require('./models/User');
 
-connectDB();  // Connect to MongoDB
+connectDB(); // Connect MongoDB
 
 app.use(session({ 
-    secret: process.env.SESSION_SECRET, 
-    resave: false, 
-    saveUninitialized: false 
+  secret: process.env.SESSION_SECRET || 'fallback-secret',
+  resave: false, 
+  saveUninitialized: false 
 }));
+
 app.use(passport.initialize());
 app.use(passport.session());
 
+// Flash messages
 app.use(require('connect-flash')());
 app.use((req, res, next) => {
-    res.locals.user = req.user;
-    res.locals.messages = req.flash();
-    next();
+  res.locals.user = req.user;
+  res.locals.messages = req.flash();
+  next();
 });
 
+// Passport config (FIXED: Single require)
+require('./config/passport');
 
-const flash = require('connect-flash');
-app.use(flash());
-
-const passportConfig = require('./config/passport');
-require('./config/passport');  // Initialize passport
-
+// Routes (FIXED: Proper order)
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
-
-var authRouter = require('./routes/auth');
-app.use('/auth', authRouter);
-
-var tasksRouter = require('./routes/tasks');
+app.use('/auth', authRouter);   
 app.use('/tasks', tasksRouter);
 
-// catch 404 and forward to error handler
+// 404 handler
 app.use(function(req, res, next) {
   next(createError(404));
 });
 
-// error handler
+// Error handler
 app.use(function(err, req, res, next) {
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
@@ -86,13 +78,17 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
-// Helper for date formatting
+// Date helper
 hbs.registerHelper('formatDate', function(date) {
-    return new Intl.DateTimeFormat('en-CA', { 
-        year: 'numeric', month: 'short', day: 'numeric', 
-        hour: '2-digit', minute: '2-digit' 
-    }).format(new Date(date));
+  return new Intl.DateTimeFormat('en-CA', { 
+    year: 'numeric', month: 'short', day: 'numeric', 
+    hour: '2-digit', minute: '2-digit' 
+  }).format(new Date(date));
 });
 
-
 module.exports = app;
+
+const port = process.env.PORT || 3000;
+app.listen(port, () => {
+  console.log(`Server running on port ${port}`);
+});
