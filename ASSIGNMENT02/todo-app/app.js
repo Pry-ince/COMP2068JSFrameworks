@@ -56,6 +56,8 @@ app.use('/users', usersRouter);
 var authRouter = require('./routes/auth');
 app.use('/auth', authRouter);
 
+var tasksRouter = require('./routes/tasks');
+app.use('/tasks', tasksRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -69,5 +71,14 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
+
+// Helper for date formatting
+hbs.registerHelper('formatDate', function(date) {
+    return new Intl.DateTimeFormat('en-CA', { 
+        year: 'numeric', month: 'short', day: 'numeric', 
+        hour: '2-digit', minute: '2-digit' 
+    }).format(new Date(date));
+});
+
 
 module.exports = app;
