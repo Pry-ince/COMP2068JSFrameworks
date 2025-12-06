@@ -1,2 +1,37 @@
-<h1>{{title}}</h1>
-<p>Welcome to {{title}}</p>
+{{> header}}
+<div class="jumbotron text-center bg-primary text-white py-5 mb-5">
+    <h1 class="display-4">📝 Todo App</h1>
+    <p class="lead">Track your tasks and never miss a deadline!</p>
+    <div class="mt-4">
+        {{#if user}}
+        <a href="/tasks" class="btn btn-light btn-lg me-2">My Tasks</a>
+        {{else}}
+        <a href="/auth/register" class="btn btn-light btn-lg me-2">Get Started</a>
+        <a href="/auth/login" class="btn btn-outline-light btn-lg">Login</a>
+        {{/if}}
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <h3>✨ Features</h3>
+        <ul>
+            <li>Add, edit, delete tasks</li>
+            <li>Set due dates with reminders</li>
+            <li>Mark tasks complete</li>
+            <li>Secure login</li>
+        </ul>
+    </div>
+    <div class="col-md-6">
+        <h3>👥 Public Tasks</h3>
+        {{#each publicTasks}}
+        <div class="card mb-2">
+            <div class="card-body">
+                <h6>{{title}}</h6>
+                <small>{{dueDate}}</small>
+            </div>
+        </div>
+        {{/each}}
+    </div>
+</div>
+{{> footer}}
