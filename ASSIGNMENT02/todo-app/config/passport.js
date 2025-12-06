@@ -1,7 +1,7 @@
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 const GitHubStrategy = require('passport-github2').Strategy;
-const User = require('../models/user');
+const User = require('../models/User');
 
 passport.use(new LocalStrategy({ usernameField: 'username' }, async (username, password, done) => {
     try {

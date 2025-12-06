@@ -2,6 +2,12 @@ var express = require('express');
 var Task = require('../models/task');
 var router = express.Router();
 
+console.log('🚀 TASKS ROUTE LOADED');  // ADD THIS LINE
+router.get('/', function(req, res) {    // TEMP SIMPLE TEST
+    console.log('📋 /tasks HIT');
+    res.send('<h1>Tasks page works! User: ' + (req.user ? req.user.username : 'Not logged in') + '</h1>');
+});
+
 // Authentication middleware
 function ensureAuthenticated(req, res, next) {
     if (req.isAuthenticated()) return next();
@@ -25,19 +31,26 @@ router.get('/add', ensureAuthenticated, function(req, res) {
 
 // Create task
 router.post('/', ensureAuthenticated, async function(req, res) {
+    console.log('📋 CREATE TASK - Body:', req.body);
+    console.log('👤 Logged in user:', req.user._id);
+    
     try {
-        const task = new Task({
-            title: req.body.title,
-            description: req.body.description,
-            dueDate: req.body.dueDate,
+        const task = new require('../models/task')({
+            title: req.body.title || '',
+            description: req.body.description || '',
+            dueDate: req.body.dueDate || null,
             user: req.user._id
         });
+        console.log('💾 Saving task:', task);
         await task.save();
+        console.log('✅ Task saved successfully:', task._id);
         res.redirect('/tasks');
     } catch (err) {
-        res.render('tasks/add', { user: req.user, error: 'Failed to create task' });
+        console.error('❌ Task save ERROR:', err.message);
+        res.render('tasks/add', { user: req.user, error: err.message });
     }
 });
+
 
 // Edit task form
 router.get('/edit/:id', ensureAuthenticated, async function(req, res) {

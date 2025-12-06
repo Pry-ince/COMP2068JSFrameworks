@@ -5,10 +5,18 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 require('dotenv').config();  
 
+var express = require('express');
+var app = express(); 
+
+
+app.get('/test', (req, res) => {
+  res.send('Test route working!');
+});
+
+
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 
-var app = express();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -30,7 +38,7 @@ const session = require('express-session');
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 const GitHubStrategy = require('passport-github2').Strategy;
-const User = require('./models/user');
+const User = require('./models/User');
 
 connectDB();  // Connect to MongoDB
 
@@ -42,13 +50,19 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
+app.use(require('connect-flash')());
+app.use((req, res, next) => {
+    res.locals.user = req.user;
+    res.locals.messages = req.flash();
+    next();
+});
+
+
 const flash = require('connect-flash');
 app.use(flash());
 
-
 const passportConfig = require('./config/passport');
 require('./config/passport');  // Initialize passport
-
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);

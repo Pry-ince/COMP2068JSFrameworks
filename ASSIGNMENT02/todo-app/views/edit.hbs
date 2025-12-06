@@ -1,0 +1,27 @@
+{{> header}}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <h2>Edit Task</h2>
+        {{#if error}}<div class="alert alert-danger">{{error}}</div>{{/if}}
+        <form method="POST" action="/tasks/edit/{{task._id}}">
+            <div class="mb-3">
+                <label class="form-label">Title *</label>
+                <input type="text" class="form-control" name="title" value="{{task.title}}" required>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Description</label>
+                <textarea class="form-control" name="description" rows="3">{{task.description}}</textarea>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Due Date</label>
+                <input type="datetime-local" class="form-control" name="dueDate"
+                    value="{{#if task.dueDate}}{{formatDate task.dueDate 'YYYY-MM-DDTHH:mm'}}{{/if}}">
+            </div>
+            <div class="d-flex gap-2">
+                <a href="/tasks" class="btn btn-secondary">Cancel</a>
+                <button type="submit" class="btn btn-primary">Update Task</button>
+            </div>
+        </form>
+    </div>
+</div>
+{{> footer}}

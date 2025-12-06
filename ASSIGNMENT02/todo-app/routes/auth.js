@@ -1,15 +1,16 @@
 var express = require('express');
 var passport = require('passport');
-var User = require('../models/user');
+var User = require('../models/User'); 
 var router = express.Router();
 
 router.get('/login', function(req, res) {
-    res.render('auth/login', { user: req.user });
+    res.render('auth/login', { user: req.user, messages: req.flash('error') });
 });
 
 router.post('/login', passport.authenticate('local', {
     successRedirect: '/tasks',
-    failureRedirect: '/auth/login'
+    failureRedirect: '/auth/login',
+    failureFlash: true
 }));
 
 router.get('/register', function(req, res) {
